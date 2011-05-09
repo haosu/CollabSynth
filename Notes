@@ -1,0 +1,6 @@
+client polls server for changes
+server returns most recently changes
+
+user changes are pushed to server
+
+server tracks changes to the board
