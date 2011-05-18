@@ -1,14 +1,8 @@
 HOST = null; // localhost
-PORT = 8001;
+PORT = 1337;
 
 // when the daemon started
 var starttime = (new Date()).getTime();
-
-var mem = process.memoryUsage();
-// every 10 seconds poll for the memory.
-setInterval(function () {
-  mem = process.memoryUsage();
-}, 10*1000);
 
 
 var fu = require("./fu"),
@@ -16,109 +10,79 @@ var fu = require("./fu"),
     url = require("url"),
     qs = require("querystring");
 
-var MESSAGE_BACKLOG = 200,
-    SESSION_TIMEOUT = 60 * 1000;
-
-var channel = new function () {
-  var messages = [],
-      callbacks = [];
-
-  this.appendMessage = function (nick, type, text) {
-    var m = { nick: nick
-            , type: type // "msg", "join", "part"
-            , text: text
-            , timestamp: (new Date()).getTime()
-            };
-
-    switch (type) {
-      case "msg":
-        sys.puts("<" + nick + "> " + text);
-        break;
-      case "join":
-        sys.puts(nick + " join");
-        break;
-      case "part":
-        sys.puts(nick + " part");
-        break;
-    }
-
-    messages.push( m );
-
-    while (callbacks.length > 0) {
-      callbacks.shift().callback([m]);
-    }
-
-    while (messages.length > MESSAGE_BACKLOG)
-      messages.shift();
-  };
-
-  this.query = function (since, callback) {
-    var matching = [];
-    for (var i = 0; i < messages.length; i++) {
-      var message = messages[i];
-      if (message.timestamp > since)
-        matching.push(message)
-    }
-
-    if (matching.length != 0) {
-      callback(matching);
-    } else {
-      callbacks.push({ timestamp: new Date(), callback: callback });
-    }
-  };
-
-  // clear old callbacks
-  // they can hang around for at most 30 seconds.
-  setInterval(function () {
-    var now = new Date();
-    while (callbacks.length > 0 && now - callbacks[0].timestamp > 30*1000) {
-      callbacks.shift().callback([]);
-    }
-  }, 3000);
+function BoardChange() {
+	var space = '';
+	var timestamp = '';
 };
 
-var sessions = {};
+function Group() {
+	var id = '';
+	var users = [];
+	var changes = [];
+	var callbacks = [];
+	var board = {};
+	
+	this.init = function() {
+		this.users = new Array();
+		this.changes = new Array();
+		this.callbacks = new Array();
+		this.board = {};
+	}
+	
+	this.getUpdates = function(since, callback) {
+		var sinceLast = [];
+		for (var i=0; i<changes.length; i++) {
+			var change = changes[i];
+			if(change.timestamp > since) {
+				sinceLast.push(change);
+			}
+		}
+		
+		if(sinceLast.length != 0) {
+			callback(sinceLast);
+		}
+		else {
+			callbacks.push({ timestamp : new Date(), callback : callback });
+		}
+	};
+	
+	// adds change to changes queue, and pops all of the callbacks
+	this.update = function(change) {
+		changes.push(change);
+		board[change.space] = !board[change.space];
+		
+		changes.push(change);
+		
+		while(callbacks.length > 0) {
+			callbacks.shift().callback([change]);
+		}
+		
+		while(changes.length > 0) {
+			changes.shift();
+		}
+	};
+	
+	this.destroy = function() {
+		if(users.length < 1) {
+			delete groups[id];
+		}
+	};
+};
 
-function createSession (nick) {
-  if (nick.length > 50) return null;
-  if (/[^\w_\-^!]/.exec(nick)) return null;
+function User() {
+	var id = '';
+	var groupId = '';
+	
+	this.destroy = function(){
+		delete users[id];
+	};
+};
 
-  for (var i in sessions) {
-    var session = sessions[i];
-    if (session && session.nick === nick) return null;
-  }
 
-  var session = { 
-    nick: nick, 
-    id: Math.floor(Math.random()*99999999999).toString(),
-    timestamp: new Date(),
+var msg = "";
+var users = {};
+var groups = {};
 
-    poke: function () {
-      session.timestamp = new Date();
-    },
-
-    destroy: function () {
-      channel.appendMessage(session.nick, "part");
-      delete sessions[session.id];
-    }
-  };
-
-  sessions[session.id] = session;
-  return session;
-}
-
-// interval to kill off old sessions
-setInterval(function () {
-  var now = new Date();
-  for (var id in sessions) {
-    if (!sessions.hasOwnProperty(id)) continue;
-    var session = sessions[id];
-
-    if (now - session.timestamp > SESSION_TIMEOUT) {
-      session.destroy();
-    }
-  }
-}, 1000);
 
 fu.listen(Number(process.env.PORT || PORT), HOST);
 
@@ -126,84 +90,109 @@ fu.get("/", fu.staticHandler("index.html"));
 fu.get("/style.css", fu.staticHandler("style.css"));
 fu.get("/client.js", fu.staticHandler("client.js"));
 fu.get("/jquery-1.2.6.min.js", fu.staticHandler("jquery-1.2.6.min.js"));
+fu.get("/raphael.js", fu.staticHandler("raphael.js"));
+fu.get("/board.js", fu.staticHandler("board.js"));
 
 
-fu.get("/who", function (req, res) {
-  var nicks = [];
-  for (var id in sessions) {
-    if (!sessions.hasOwnProperty(id)) continue;
-    var session = sessions[id];
-    nicks.push(session.nick);
-  }
-  res.simpleJSON(200, { nicks: nicks
-                      , rss: mem.rss
-                      });
+// send
+fu.get("/send", function(req, res) {
+	var userId = qs.parse(url.parse(req.url).query).userId;
+	var space = qs.parse(url.parse(req.url).query).space;
+	
+	// if session !exists
+	if(users[userId]==undefined) {
+		res.simpleJSON(400, {error : "User not found. " + userId});
+		return;
+	}
+	
+	// find group
+	var groupId = users[userId].groupId;
+	var change = new BoardChange();
+	
+	change.space = space;
+	change.timestamp = (new Date()).getTime();
+	groups[groupId].update(change);
+	
+	res.simpleJSON(200, { });
 });
 
-fu.get("/join", function (req, res) {
-  var nick = qs.parse(url.parse(req.url).query).nick;
-  if (nick == null || nick.length == 0) {
-    res.simpleJSON(400, {error: "Bad nick."});
-    return;
-  }
-  var session = createSession(nick);
-  if (session == null) {
-    res.simpleJSON(400, {error: "Nick in use"});
-    return;
-  }
-
-  //sys.puts("connection: " + nick + "@" + res.connection.remoteAddress);
-
-  channel.appendMessage(session.nick, "join");
-  res.simpleJSON(200, { id: session.id
-                      , nick: session.nick
-                      , rss: mem.rss
-                      , starttime: starttime
-                      });
+// data
+fu.get("/data", function(req, res) {
+	var since = qs.parse(url.parse(req.url).query).since;
+	
+	if (!since) {
+		res.simpleJSON(400, { error: "Must supply since parameter" });
+		return;
+	}
+	
+	var userId = qs.parse(url.parse(req.url).query).userId;
+	
+	// if session exists
+	if(users[userId]==undefined) {
+		res.simpleJSON(400, {error : "User not found."});
+		return;
+	}
+	
+	groups[users[userId].groupId].getUpdates(since, function(changes) {
+			res.simpleJSON(200, { changes : changes });
+		});
+	
 });
 
-fu.get("/part", function (req, res) {
-  var id = qs.parse(url.parse(req.url).query).id;
-  var session;
-  if (id && sessions[id]) {
-    session = sessions[id];
-    session.destroy();
-  }
-  res.simpleJSON(200, { rss: mem.rss });
+
+
+// join
+fu.get("/join", function(req, res) {
+	userId = Math.floor(Math.random()*99999999999).toString();
+	var groupId = qs.parse(url.parse(req.url).query).groupId;
+
+	if(groupId==undefined) {
+		// assign to random group
+		for(i in groups) {
+			groupId = i;
+			break;
+		}
+	}
+	
+	if(groupId==undefined || groups[groupId]==undefined) {
+		groupId = Math.floor(Math.random()*99999999999).toString();
+		groups[groupId] = new Group();
+		groups[groupId].init();
+		groups[groupId].id = groupId;
+	}
+	
+	
+	// add to group
+	var user = new User();
+	user.id = userId;
+	user.groupId = groupId;
+	users[userId] = user;
+	
+	sys.puts(groupId);
+	sys.puts(groups[groupId].users);
+	groups[groupId].users.push(userId);
+	
+	res.simpleJSON(200, { userId : userId, board:groups[groupId].board });
 });
 
-fu.get("/recv", function (req, res) {
-  if (!qs.parse(url.parse(req.url).query).since) {
-    res.simpleJSON(400, { error: "Must supply since parameter" });
-    return;
-  }
-  var id = qs.parse(url.parse(req.url).query).id;
-  var session;
-  if (id && sessions[id]) {
-    session = sessions[id];
-    session.poke();
-  }
+// leave
+fu.get("/leave", function(req, res) {
+	var userId = qs.parse(url.parse(req.url).query).userId;
+	
+	// if session exists
+	if(users[userId]==undefined) {
+		// remove session
+		res.simpleJSON(400, {error : "User not found."});
+		return;
+	}
 
-  var since = parseInt(qs.parse(url.parse(req.url).query).since, 10);
+	var user = users[userId];
+	groups[user.groupId].destroy();
+	user.destroy();
 
-  channel.query(since, function (messages) {
-    if (session) session.poke();
-    res.simpleJSON(200, { messages: messages, rss: mem.rss });
-  });
+	res.simpleJSON(200, {});
 });
 
-fu.get("/send", function (req, res) {
-  var id = qs.parse(url.parse(req.url).query).id;
-  var text = qs.parse(url.parse(req.url).query).text;
 
-  var session = sessions[id];
-  if (!session || !text) {
-    res.simpleJSON(400, { error: "No such session id" });
-    return;
-  }
 
-  session.poke();
 
-  channel.appendMessage(session.nick, "msg", text);
-  res.simpleJSON(200, { rss: mem.rss });
-});
