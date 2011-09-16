@@ -4,3 +4,18 @@ server returns most recently changes
 user changes are pushed to server
 
 server tracks changes to the board
+
+
+
+// Entities
+Boards - public/private
+Users
+
+// FLOW
+User opens app
+Displays random public board - shows the id of the board
+	shows different public boards to the right and left
+	*user can click/navigate to the adjacent views
+
+user can navigate to speicific board Id
+user can create a new board - given a random ID, can mark as private

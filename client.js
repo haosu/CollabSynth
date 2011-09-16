@@ -2,14 +2,35 @@ var musicBoard;
 var USERID = '';
 var SINCE = 0;
 
+var audioUrls = [];
+
 $().ready(function(){
+		
+	$("#joinButton").click(function(){
+		init();
+		join();
+		$("#signInBox").remove();
+	});
+	
+	//join();
+});
+
+
+function init() {
 	musicBoard = new MusicBoard();
 	musicBoard.init();
 	musicBoard.draw();
 	setInterval(function(){musicBoard.play(musicBoard)}, 250);
-	
-	join();
-});
+}
+
+function loadAudio() {
+	for(var i in audioUrls) {
+		//audioUrls[i];
+		//create new audio element with audioUrls[i] as source
+		//set id as audio-i
+		
+	}
+}
 
 function join() {
 	$.ajax({
@@ -23,7 +44,8 @@ function join() {
 		},
 		success : function(data) {
 			USERID = data.userId;
-			musicBoard.populateBoard(data.board);
+			console.log(data.changes);
+			musicBoard.populateBoard(data.changes);
 			update();
 		}
 	});
@@ -46,9 +68,8 @@ function update() {
 			SINCE = (new Date()).getTime()
 			transmission_errors = 0;
 
-			for(var i in data.changes) {
-				musicBoard.toggle(data.changes[i].space);
-			}
+			musicBoard.populateBoard(data.changes);
+
 			update();
 		}
 	});

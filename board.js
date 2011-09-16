@@ -2,6 +2,7 @@
 
 function MusicBoard() {
 	var RADIUS_SMALL = 20;
+	var RADIUS_MEDIUM = 25;
 	var RADIUS_LARGE = 30;
 	var COLOR = "#333";
 	var COLOR_OVER = "#CCC";
@@ -65,14 +66,24 @@ function MusicBoard() {
 		
 	};
 	
-	this.populateBoard = function(board) {
+	this.populateBoard = function(changes) {
+		var change;
+		for(var i in changes) {
+			change = changes[i].space || changes[i];
+			musicBoard.toggle(change);
+		}
 	};
 	
 	this.play = function(obj) {
 		var previousColumn = obj.currentColumn;
 		obj.currentColumn = (obj.currentColumn + 1) % width;
+
+		obj.verticalSets[obj.currentColumn].animate({"r":RADIUS_MEDIUM}, 50, ">");		
+		obj.verticalSets[previousColumn].animate({"r":RADIUS_SMALL}, 50, ">");		
 		
+		/*
 		obj.verticalSets[obj.currentColumn].animate({"stroke":COLOR_OVER, "fill":COLOR_OVER}, 50, ">");		
 		obj.verticalSets[previousColumn].animate({"stroke":COLOR, "fill":COLOR}, 50, ">");		
+		*/
 	};
 };

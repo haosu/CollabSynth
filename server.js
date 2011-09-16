@@ -50,9 +50,7 @@ function Group() {
 	this.update = function(change) {
 		changes.push(change);
 		board[change.space] = !board[change.space];
-		
-		changes.push(change);
-		
+
 		while(callbacks.length > 0) {
 			callbacks.shift().callback([change]);
 		}
@@ -60,6 +58,17 @@ function Group() {
 		while(changes.length > 0) {
 			changes.shift();
 		}
+	};
+	
+	this.exportBoard = function() {
+		var change = new Array();
+		for(var i in board) {
+			if(board[i] == true) {
+				change.push(i);
+			}
+		}
+		
+		return change;
 	};
 	
 	this.destroy = function() {
@@ -172,7 +181,7 @@ fu.get("/join", function(req, res) {
 	sys.puts(groups[groupId].users);
 	groups[groupId].users.push(userId);
 	
-	res.simpleJSON(200, { userId : userId, board:groups[groupId].board });
+	res.simpleJSON(200, { userId : userId, changes:groups[groupId].exportBoard() });
 });
 
 // leave
