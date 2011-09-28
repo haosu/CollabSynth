@@ -47,6 +47,8 @@ function Group() {
 	};
 	
 	// adds change to changes queue, and pops all of the callbacks
+	// this sends each individual change as it's own response
+	// should add to a queue
 	this.update = function(change) {
 		changes.push(change);
 		board[change.space] = !board[change.space];
@@ -83,8 +85,82 @@ function User() {
 	var groupId = '';
 	
 	this.destroy = function(){
+		// remove from group
 		delete users[id];
 	};
+};
+
+
+function getGroup(id, option) {
+	var retGroups = [];
+
+	var group = groups[id];
+
+	if(!group) {
+		group = createGroup(id);
+	}
+	
+	retGroups.push(group);
+
+
+	return retGroups;
+
+
+	/*
+	// search until current is found
+	// store previous and next
+	var groupKeyArr = Object.getKeys(groups);
+	var groupKeyArrLength = groupKeyArr.length;
+
+	var previousId, nextId;
+
+
+	for(var i=0; i<groupKeyArrLength; i++) {
+		if(groupKeyArr == id) {
+			previousId = groupKeyArr[(i-1) % groupKeyArrLength];
+			nextId = groupKeyArr[(i+1) % groupKeyArrLength];
+			break;
+		}
+	}
+
+	switch(option) {
+		// get previous
+		case -1 :
+			return [groups[previousId], groups[id]];
+		break;
+
+		// current
+		case 0 : 
+			return groups[id];
+		break;
+
+		// get next
+		case 1 :
+			return [groups[id], groups[nextId]];
+		break;
+
+		// previous and next
+		case 2 :
+			return [groups[previousId], groups[id], groups[nextId]];
+		break;
+
+		default :
+		break;
+	}
+	*/
+}
+
+
+
+var createGroup = function(groupId) {
+	if(groupId==undefined || groups[groupId]==undefined) {
+		groupId = Math.floor(Math.random()*99999999999).toString();
+		groups[groupId] = new Group();
+		groups[groupId].init();
+		groups[groupId].id = groupId;
+	}
+
+	return groups[groupId];
 };
 
 
@@ -100,7 +176,8 @@ fu.get("/style.css", fu.staticHandler("style.css"));
 fu.get("/client.js", fu.staticHandler("client.js"));
 fu.get("/jquery-1.2.6.min.js", fu.staticHandler("jquery-1.2.6.min.js"));
 fu.get("/raphael.js", fu.staticHandler("raphael.js"));
-fu.get("/board.js", fu.staticHandler("board.js"));
+fu.get("/client-board.js", fu.staticHandler("board.js"));
+fu.get("/backbone.js", fu.staticHandler("backbone.js"));
 
 
 // send
@@ -125,16 +202,29 @@ fu.get("/send", function(req, res) {
 	res.simpleJSON(200, { });
 });
 
+
+fu.get("/switch", function(req, res){
+	var groupId = qs.parse(url.parse(req.url).query).groupId;
+	var userId = qs.parse(url.parse(req.url).query).userId;
+
+	// check if group exists
+	var group = getGroup(groupId);
+
+
+	users[userId].groupId = groupId;
+
+});
+
 // data
 fu.get("/data", function(req, res) {
 	var since = qs.parse(url.parse(req.url).query).since;
-	
+	var userId = qs.parse(url.parse(req.url).query).userId;
+
 	if (!since) {
 		res.simpleJSON(400, { error: "Must supply since parameter" });
 		return;
 	}
-	
-	var userId = qs.parse(url.parse(req.url).query).userId;
+
 	
 	// if session exists
 	if(users[userId]==undefined) {
@@ -149,39 +239,40 @@ fu.get("/data", function(req, res) {
 });
 
 
-
 // join
 fu.get("/join", function(req, res) {
+	// assign userId
+	// get random group, +/- 1 groups
+	// assign group
+	// return 
 	userId = Math.floor(Math.random()*99999999999).toString();
 	var groupId = qs.parse(url.parse(req.url).query).groupId;
 
 	if(groupId==undefined) {
 		// assign to random group
 		for(i in groups) {
+			// should not be at max capacity
 			groupId = i;
 			break;
 		}
+
+		sys.puts('JOIN | Group reassigned to ' + groupId);
 	}
 	
-	if(groupId==undefined || groups[groupId]==undefined) {
-		groupId = Math.floor(Math.random()*99999999999).toString();
-		groups[groupId] = new Group();
-		groups[groupId].init();
-		groups[groupId].id = groupId;
-	}
-	
+	// GET GROUP
+	var group = getGroup(groupId);
 	
 	// add to group
 	var user = new User();
 	user.id = userId;
 	user.groupId = groupId;
 	users[userId] = user;
+
+	group.users.push(userId);
 	
-	sys.puts(groupId);
-	sys.puts(groups[groupId].users);
-	groups[groupId].users.push(userId);
-	
-	res.simpleJSON(200, { userId : userId, changes:groups[groupId].exportBoard() });
+	res.simpleJSON(200, { userId : userId, 
+												changes: group.exportBoard() 
+											});
 });
 
 // leave
