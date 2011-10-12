@@ -20,6 +20,7 @@ $().ready(function(){
 function init() {
 	musicBoard = new MusicBoard();
 	musicBoard.init();
+	$("#container").append(musicBoard.container);
 	musicBoard.draw();
 }
 
@@ -45,6 +46,7 @@ function join(boardId) {
 		success : function(data) {
 			USERID = data.userId;
 			musicBoard.populateBoard(data.changes);
+			$("#boardId").html(data.boardId);
 
 			setInterval(function(){musicBoard.play(musicBoard)}, 250);
 
@@ -53,6 +55,8 @@ function join(boardId) {
 	});
 };
 
+
+// move this in to the client-board.js
 function update() {
 	$.ajax({
 		cache : false,
@@ -61,7 +65,7 @@ function update() {
 		dataType : "json",
 		data : {userId : USERID, since : SINCE},
 		error : function(data) {
-			console.log(data.responseText);
+			console.log(data);
 			//transmission_errors += 1;
 			//don't flood the servers on error, wait 10 seconds before retrying
 			setTimeout(update, 10*1000);
@@ -77,6 +81,7 @@ function update() {
 	});
 };
 
+// init the board, remove the old board, add the new one to page
 function changeBoard(space) {
 	$.ajax({
 		cache : false,

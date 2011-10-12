@@ -12,15 +12,24 @@ function MusicBoard() {
 	var paper;
 	var currentColumn;
 	var verticalSets = [];
+
+	var template;
+	var container;
 	
 	this.init = function() {
 		this.currentColumn = -1;
 		this.verticalSets = new Array();
+
+		this.template = Handlebars.compile(
+											$("#board-template").html()
+										);
+
+    this.container = $("<div class='board_container'>").html(this.template());
 	};
 	
 	this.draw = function() {
-		
-		this.paper = Raphael("board", 960, 960);
+		var boardDiv = this.container.find(".board")[0];
+		this.paper = Raphael(boardDiv, 960, 960);
 		
 		for(var i=0; i<height; i++) {
 			this.verticalSets[i] = this.paper.set();

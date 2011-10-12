@@ -5,7 +5,7 @@
 	<script src="client-board.js" type="text/javascript"></script>
 	<script src="client.js" type="text/javascript"></script>
 	<script src="raphael.js" type="text/javascript"></script>
-	
+	<script src="handlebars.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -14,7 +14,19 @@
 		<input type="text" name="groupName" placeholder="Enter group name"/>
 	</div>
 	
-	<div id="board"></div>
-</body>
+	<div id="container">
+	</div>
 
+	<div id="board"></div>
+	<div id="boardId"></div>
+
+
+	<script id="board-template" type="text/x-handlebars-template">
+	  <div class="board">
+	  </div>
+	  <div class="boardId">
+	  </div>
+	</script>
+
+</body>
 </html>

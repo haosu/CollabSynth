@@ -54,7 +54,7 @@ function Group() {
 		board[change.space] = !board[change.space];
 
 		while(callbacks.length > 0) {
-			callbacks.shift().callback([change]);
+			callbacks.shift().callback( id, [change] );
 		}
 		
 		while(changes.length > 0) {
@@ -97,7 +97,7 @@ function getGroup(id, option) {
 	var group = groups[id];
 
 	if(!group) {
-		group = createGroup(id);
+		group =  createGroup(id);
 	}
 	
 	retGroups.push(group);
@@ -155,12 +155,13 @@ function getGroup(id, option) {
 var createGroup = function(groupId) {
 	if(groupId==undefined || groups[groupId]==undefined) {
 		groupId = Math.floor(Math.random()*99999999999).toString();
-		groups[groupId] = new Group();
-		groups[groupId].init();
-		groups[groupId].id = groupId;
+		group = new Group();
+		group.id = groupId;
+		group.init();
+		groups[groupId] = group;
 	}
 
-	return groups[groupId];
+	return group;
 };
 
 
@@ -176,8 +177,9 @@ fu.get("/style.css", fu.staticHandler("style.css"));
 fu.get("/client.js", fu.staticHandler("client.js"));
 fu.get("/jquery-1.2.6.min.js", fu.staticHandler("jquery-1.2.6.min.js"));
 fu.get("/raphael.js", fu.staticHandler("raphael.js"));
-fu.get("/client-board.js", fu.staticHandler("board.js"));
+fu.get("/client-board.js", fu.staticHandler("client-board.js"));
 fu.get("/backbone.js", fu.staticHandler("backbone.js"));
+fu.get("/handlebars.js", fu.staticHandler("handlebars.js"))
 
 
 // send
@@ -187,7 +189,7 @@ fu.get("/send", function(req, res) {
 	
 	// if session !exists
 	if(users[userId]==undefined) {
-		res.simpleJSON(400, {error : "User not found. " + userId});
+		res.simpleJSON(400, {responseText : "User not found. " + userId});
 		return;
 	}
 	
@@ -221,19 +223,22 @@ fu.get("/data", function(req, res) {
 	var userId = qs.parse(url.parse(req.url).query).userId;
 
 	if (!since) {
-		res.simpleJSON(400, { error: "Must supply since parameter" });
+		res.simpleJSON(400, { responseText: "Must supply since parameter" });
 		return;
 	}
 
 	
 	// if session exists
 	if(users[userId]==undefined) {
-		res.simpleJSON(400, {error : "User not found."});
+		res.simpleJSON(400, {responseText : "User not found."});
 		return;
 	}
 	
-	groups[users[userId].groupId].getUpdates(since, function(changes) {
-			res.simpleJSON(200, { changes : changes });
+	groups[users[userId].groupId].getUpdates(since, function(boardId, changes) {
+			res.simpleJSON(200, 
+				{ changes : changes,
+					boardId : boardId
+				});
 		});
 	
 });
@@ -248,20 +253,29 @@ fu.get("/join", function(req, res) {
 	userId = Math.floor(Math.random()*99999999999).toString();
 	var groupId = qs.parse(url.parse(req.url).query).groupId;
 
-	if(groupId==undefined) {
+	if(!groupId || groupId=='') {
 		// assign to random group
 		for(i in groups) {
 			// should not be at max capacity
 			groupId = i;
 			break;
 		}
-
-		sys.puts('JOIN | Group reassigned to ' + groupId);
 	}
-	
+
 	// GET GROUP
-	var group = getGroup(groupId);
-	
+	var group = groups[groupId];
+	if(!groupId || !group) {
+		groupId = Math.floor(Math.random()*99999999999).toString();
+		group = new Group();
+		group.id = groupId;
+		group.init();
+		groups[groupId] = group;
+	}
+
+
+	sys.puts('JOIN | Group is ' + groupId);
+
+
 	// add to group
 	var user = new User();
 	user.id = userId;
@@ -271,7 +285,8 @@ fu.get("/join", function(req, res) {
 	group.users.push(userId);
 	
 	res.simpleJSON(200, { userId : userId, 
-												changes: group.exportBoard() 
+												boardId : groupId,
+												changes : group.exportBoard() 
 											});
 });
 
@@ -282,7 +297,7 @@ fu.get("/leave", function(req, res) {
 	// if session exists
 	if(users[userId]==undefined) {
 		// remove session
-		res.simpleJSON(400, {error : "User not found."});
+		res.simpleJSON(400, {responseText : "User not found."});
 		return;
 	}
 
