@@ -94,4 +94,32 @@ function MusicBoard() {
 		obj.verticalSets[previousColumn].animate({"stroke":COLOR, "fill":COLOR}, 50, ">");		
 		*/
 	};
+
+	this.update = function() {
+		$.ajax({
+			cache : false,
+			type : "GET",
+			url : "/data", 
+			dataType : "json",
+			data : {userId : USERID, since : SINCE},
+			error : this.onUpdateError,
+			success : this.onUpdateSuccess
+		});
+	};
+
+	this.onUpdateSuccess = function(data) {
+		SINCE = (new Date()).getTime()
+		transmission_errors = 0;
+
+		this.populateBoard(data.changes);
+
+		this.update();
+	};
+
+	this.onUpdateError = function(data) {
+		console.log(data);
+		//transmission_errors += 1;
+		//don't flood the servers on error, wait 10 seconds before retrying
+		setTimeout(update, 10*1000);
+	};
 };
