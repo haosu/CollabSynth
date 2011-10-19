@@ -13,6 +13,9 @@ function MusicBoard() {
 	var currentColumn;
 	var verticalSets = [];
 
+	var boardId;
+	var userId;
+
 	var template;
 	var container;
 	
@@ -101,11 +104,24 @@ function MusicBoard() {
 			type : "GET",
 			url : "/data", 
 			dataType : "json",
-			data : {userId : USERID, since : SINCE},
+			data : {userId : userId, since : SINCE},
 			error : this.onUpdateError,
 			success : this.onUpdateSuccess
 		});
 	};
+
+	this.leave = function() {
+		$.ajax({
+			cache : false,
+			type : "GET",
+			url : "/leave", 
+			dataType : "json",
+			data : {userId : userId, groupId : boardId},
+			success : function() {
+				
+			}
+		});
+	},
 
 	this.onUpdateSuccess = function(data) {
 		SINCE = (new Date()).getTime()

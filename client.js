@@ -6,12 +6,12 @@ var SINCE = 0;
 var audioUrls = [];
 
 $().ready(function(){
-		
+
 	$("#joinButton").click(function(){
 		boardId = $("#signInBox input").val();
 		init(boardId);
 		join(boardId);
-		$("#signInBox").remove();
+		//$("#signInBox").remove();
 	});
 	
 });
@@ -38,13 +38,14 @@ function join(boardId) {
 		cache : false,
 		type : "GET",
 		dataType : "json",
-		url : "/join" + "?groupId=" + boardId,
-		data : {},
+		url : "/join",
+		data : {groupId : boardId},
 		error : function () {
 			console.log('error');
 		},
 		success : function(data) {
 			USERID = data.userId;
+			musicBoard.boardId = data.boardId;
 			musicBoard.populateBoard(data.changes);
 			$("#boardId").html(data.boardId);
 
@@ -81,7 +82,22 @@ function update() {
 	});
 };
 
-// init the board, remove the old board, add the new one to page
+function switchGroup(groupId) {
+	$.ajax({
+		cache : false,
+		type : "GET",
+		url : "/switchGroup", 
+		dataType : "json",
+		data : {userId : USERID, groupId : groupId, since : SINCE},
+		error : function(data) {
+		},
+		success : function(data) {
+		}
+	});
+}
+
+
+// send data to server
 function changeBoard(space) {
 	$.ajax({
 		cache : false,

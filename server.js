@@ -8,7 +8,8 @@ var starttime = (new Date()).getTime();
 var fu = require("./fu"),
     sys = require("sys"),
     url = require("url"),
-    qs = require("querystring");
+    qs = require("querystring"),
+    $ = require("jquery");
 
 function BoardChange() {
 	var space = '';
@@ -90,8 +91,52 @@ function User() {
 	};
 };
 
+function listGroups() {
+	var str = '';
 
-function getGroup(id, option) {
+	for(var i in groups) {
+		str += i + ' ';
+	}
+	sys.puts(str);
+
+}
+
+function joinGroup(groups, users, userId, groupId) {
+	if(!groupId || groupId=='') {
+		// assign to random group
+		for(i in groups) {
+			sys.puts(i);
+			// should not be at max capacity
+			groupId = i;
+			break;
+		}
+	}
+
+	// GET GROUP
+	var group = groups[groupId];
+	if(!groupId || !group) {
+		groupId = Math.floor(Math.random()*99999999999).toString();
+		group = new Group();
+		group.id = groupId;
+		group.init();
+		groups[groupId] = group;
+	}
+
+	sys.puts('JOIN | Group is ' + groupId);
+
+
+	sys.puts(this.groups);
+	sys.puts(groups);
+	sys.puts(groups[groupId].id);
+
+	return group;
+}
+
+function leaveGroup(groups, users, userId) {
+	
+}
+
+function getGroup(groups, id, option) {
 	var retGroups = [];
 
 	var group = groups[id];
@@ -205,20 +250,65 @@ fu.get("/send", function(req, res) {
 });
 
 
-fu.get("/switch", function(req, res){
+// LOL THIS IS SO BAD! MAKE THESE FUNCTIONS MODULAR
+// next, previous, or id
+fu.get("/switchGroup", function(req, res){
 	var groupId = qs.parse(url.parse(req.url).query).groupId;
 	var userId = qs.parse(url.parse(req.url).query).userId;
 
+
+	// leave group
+	$.inArray(user.id, groups[userId].users);
+	user.groupId = '';
+
+
+
 	// check if group exists
-	var group = getGroup(groupId);
+	if(!groupId || groupId=='') {
+		// assign to random group
+		for(i in groups) {
+			// should not be at max capacity
+			groupId = i;
+			break;
+		}
+	}
+
+	// GET GROUP
+	var group = groups[groupId];
+	if(!groupId || !group) {
+		groupId = Math.floor(Math.random()*99999999999).toString();
+		group = new Group();
+		group.id = groupId;
+		group.init();
+		groups[groupId] = group;
+	}
 
 
-	users[userId].groupId = groupId;
+	sys.puts('JOIN | Group is ' + groupId);
 
+
+	// add to group
+	var user = new User();
+	user.id = userId;
+	user.groupId = groupId;
+	users[userId] = user;
+
+	group.users.push(userId);
+
+
+
+
+	res.simpleJSON(200, { userId : userId, 
+											boardId : groupId,
+											changes : group.exportBoard() 
+										});
 });
 
 // data
 fu.get("/data", function(req, res) {
+	listGroups();
+
+
 	var since = qs.parse(url.parse(req.url).query).since;
 	var userId = qs.parse(url.parse(req.url).query).userId;
 
@@ -253,6 +343,7 @@ fu.get("/join", function(req, res) {
 	userId = Math.floor(Math.random()*99999999999).toString();
 	var groupId = qs.parse(url.parse(req.url).query).groupId;
 
+
 	if(!groupId || groupId=='') {
 		// assign to random group
 		for(i in groups) {
@@ -272,7 +363,6 @@ fu.get("/join", function(req, res) {
 		groups[groupId] = group;
 	}
 
-
 	sys.puts('JOIN | Group is ' + groupId);
 
 
@@ -283,6 +373,8 @@ fu.get("/join", function(req, res) {
 	users[userId] = user;
 
 	group.users.push(userId);
+
+	sys.puts(groups[groupId].id);
 	
 	res.simpleJSON(200, { userId : userId, 
 												boardId : groupId,
@@ -293,7 +385,8 @@ fu.get("/join", function(req, res) {
 // leave
 fu.get("/leave", function(req, res) {
 	var userId = qs.parse(url.parse(req.url).query).userId;
-	
+	var groupId = qs.parse(url.parse(req.url).query).groupId;
+
 	// if session exists
 	if(users[userId]==undefined) {
 		// remove session
@@ -301,9 +394,11 @@ fu.get("/leave", function(req, res) {
 		return;
 	}
 
-	var user = users[userId];
-	groups[user.groupId].destroy();
-	user.destroy();
+	// leave group
+	$.inArray(user.id, groups[userId].users);
+	user.groupId = '';
+
+	// user should be reaped later
 
 	res.simpleJSON(200, {});
 });
