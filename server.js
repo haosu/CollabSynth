@@ -97,7 +97,6 @@ function listGroups() {
 	for(var i in groups) {
 		str += i + ' ';
 	}
-	sys.puts(str);
 
 }
 
@@ -105,7 +104,6 @@ function joinGroup(groups, users, userId, groupId) {
 	if(!groupId || groupId=='') {
 		// assign to random group
 		for(i in groups) {
-			sys.puts(i);
 			// should not be at max capacity
 			groupId = i;
 			break;
@@ -124,10 +122,11 @@ function joinGroup(groups, users, userId, groupId) {
 
 	sys.puts('JOIN | Group is ' + groupId);
 
-
+	/*
 	sys.puts(this.groups);
 	sys.puts(groups);
 	sys.puts(groups[groupId].id);
+	*/
 
 	return group;
 }
@@ -353,6 +352,8 @@ fu.get("/join", function(req, res) {
 		}
 	}
 
+	sys.puts("JOIN | Trying to join " + groupId);
+
 	// GET GROUP
 	var group = groups[groupId];
 	if(!groupId || !group) {
@@ -373,8 +374,6 @@ fu.get("/join", function(req, res) {
 	users[userId] = user;
 
 	group.users.push(userId);
-
-	sys.puts(groups[groupId].id);
 	
 	res.simpleJSON(200, { userId : userId, 
 												boardId : groupId,
