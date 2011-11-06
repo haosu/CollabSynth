@@ -3,12 +3,12 @@ function MusicBoard() {
 	var RADIUS_SMALL = 20;
 	var RADIUS_MEDIUM = 25;
 	var RADIUS_LARGE = 30;
-	var COLOR = "#333";
+	var COLOR = "#666";
 	var COLOR_OVER = "#CCC";
 	var COLOR_ACTIVE = "#FF0";
 	
-	var height = 10;
-	var width = 10;
+	var height = 8;
+	var width = 16;
 	var paper;
 	var currentColumn;
 	var verticalSets = [];
@@ -27,18 +27,18 @@ function MusicBoard() {
 											$("#board-template").html()
 										);
 
-    this.container = $("<div class='board_container'>").html(this.template());
+    this.container = $("<div class='board_container inner'>").html(this.template());
 	};
 	
 	this.draw = function() {
 		var boardDiv = this.container.find(".board")[0];
-		this.paper = Raphael(boardDiv, 960, 960);
+		this.paper = Raphael(boardDiv, width*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5, height*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5);
 		
-		for(var i=0; i<height; i++) {
+		for(var i=0; i<width; i++) {
 			this.verticalSets[i] = this.paper.set();
 			
-			for(var j=0; j<width; j++) {
-				var circle = this.paper.circle(i*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1), j*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1), RADIUS_SMALL)
+			for(var j=0; j<height; j++) {
+				var circle = this.paper.circle(i*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5, j*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5, RADIUS_SMALL)
 									.attr({"stroke":COLOR, "fill":COLOR});
 				
 				(function(circle, space){

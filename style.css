@@ -1,0 +1,52 @@
+body {
+	background-color : #000;
+	font-family : sans-serif;
+}
+
+.footer {
+	bottom : 0;
+	margin-top: 20px;
+	border-top: 5px solid white;
+	background-color:#ccc;
+	width : 805px;
+	height : 200px;
+}
+
+.container {
+	width : 100%;
+}
+
+.container .inner {
+	width: 50%;
+	margin : auto;
+}
+
+.board_container {
+	width : 805px;
+	margin : auto;
+}
+
+.signin_container {
+	width : 200px;
+	margin : auto;
+	margin-top : 20px;
+}
+
+#signInBox {
+	font-size : 64px;
+	width : 200px;
+	color : #ddd;
+}
+
+#signInBox #groupName {
+	width : 200px;
+}
+
+#signInBox #joinButton {
+	border : 1px solid darkgreen;
+	font-size : 64px;
+	text-align : center;
+	background-color: green;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}

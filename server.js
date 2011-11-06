@@ -1,9 +1,9 @@
 HOST = null; // localhost
 PORT = 1337;
 
+ 
 // when the daemon started
 var starttime = (new Date()).getTime();
-
 
 var fu = require("./fu"),
     sys = require("sys"),
@@ -22,7 +22,7 @@ function Group() {
 	var changes = [];
 	var callbacks = [];
 	var board = {};
-	
+	 
 	this.init = function() {
 		this.users = new Array();
 		this.changes = new Array();
@@ -121,7 +121,6 @@ function joinGroup(groups, users, userId, groupId) {
 	}
 
 	sys.puts('JOIN | Group is ' + groupId);
-
 	/*
 	sys.puts(this.groups);
 	sys.puts(groups);
@@ -209,15 +208,17 @@ var createGroup = function(groupId) {
 };
 
 
+
+
 var msg = "";
 var users = {};
 var groups = {};
-
 
 fu.listen(Number(process.env.PORT || PORT), HOST);
 
 fu.get("/", fu.staticHandler("index.html"));
 fu.get("/style.css", fu.staticHandler("style.css"));
+fu.get("/reset.css", fu.staticHandler("reset.css"));
 fu.get("/client.js", fu.staticHandler("client.js"));
 fu.get("/jquery-1.2.6.min.js", fu.staticHandler("jquery-1.2.6.min.js"));
 fu.get("/raphael.js", fu.staticHandler("raphael.js"));
@@ -356,8 +357,10 @@ fu.get("/join", function(req, res) {
 
 	// GET GROUP
 	var group = groups[groupId];
-	if(!groupId || !group) {
-		groupId = Math.floor(Math.random()*99999999999).toString();
+	if(!group) {
+		if(!groupId) {
+			groupId = Math.floor(Math.random()*99999999999).toString();
+		}
 		group = new Group();
 		group.id = groupId;
 		group.init();
