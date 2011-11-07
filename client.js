@@ -1,27 +1,26 @@
 
 var musicBoard;
-var USERID = '';
-var SINCE = 0;
-
 var audioUrls = [];
 
 $().ready(function(){
 
 	$("#joinButton").click(function(){
-		boardId = $("#signInBox input").val();
-		init(boardId);
-		join(boardId);
+	boardId = $("#signInBox input").val();
+	init(boardId);
+		//join(boardId);
 		//$("#signInBox").remove();
 	});
-	
+
 });
 
 
-function init() {
+function init(boardId) {
 	musicBoard = new MusicBoard();
 	musicBoard.init();
-	$("#container").append(musicBoard.container);
+	musicBoard.join(boardId)
+	$(".board_container").append(musicBoard.container);
 	musicBoard.draw();
+
 }
 
 function loadAudio() {
@@ -32,7 +31,7 @@ function loadAudio() {
 		
 	}
 }
-
+/*
 function join(boardId) {
 	$.ajax({
 		cache : false,
@@ -113,3 +112,4 @@ function changeBoard(space) {
 		}
 	});
 };
+*/

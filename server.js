@@ -1,7 +1,7 @@
 HOST = null; // localhost
 PORT = 1337;
 
- 
+   
 // when the daemon started
 var starttime = (new Date()).getTime();
 
@@ -208,8 +208,8 @@ var createGroup = function(groupId) {
 };
 
 
-
-
+ 
+ 
 var msg = "";
 var users = {};
 var groups = {};
@@ -224,9 +224,10 @@ fu.get("/jquery-1.2.6.min.js", fu.staticHandler("jquery-1.2.6.min.js"));
 fu.get("/raphael.js", fu.staticHandler("raphael.js"));
 fu.get("/client-board.js", fu.staticHandler("client-board.js"));
 fu.get("/backbone.js", fu.staticHandler("backbone.js"));
-fu.get("/handlebars.js", fu.staticHandler("handlebars.js"))
-
-
+fu.get("/handlebars.js", fu.staticHandler("handlebars.js"));
+fu.get("/underscore.js", fu.staticHandler("underscore.js"));
+  
+  
 // send
 fu.get("/send", function(req, res) {
 	var userId = qs.parse(url.parse(req.url).query).userId;
@@ -238,7 +239,7 @@ fu.get("/send", function(req, res) {
 		return;
 	}
 	
-	// find group
+	// fi nd group
 	var groupId = users[userId].groupId;
 	var change = new BoardChange();
 	
@@ -295,7 +296,7 @@ fu.get("/switchGroup", function(req, res){
 
 	group.users.push(userId);
 
-
+  
 
 
 	res.simpleJSON(200, { userId : userId, 

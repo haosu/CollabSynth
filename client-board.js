@@ -15,11 +15,14 @@ function MusicBoard() {
 
 	var boardId;
 	var userId;
+	var since = 0;
 
 	var template;
 	var container;
 	
 	this.init = function() {
+		_.bindAll(this)
+
 		this.currentColumn = -1;
 		this.verticalSets = new Array();
 
@@ -27,7 +30,9 @@ function MusicBoard() {
 											$("#board-template").html()
 										);
 
-    this.container = $("<div class='board_container inner'>").html(this.template());
+    this.container = $("<div class='board_inner'>").html(this.template());
+
+    this.since = 0;
 	};
 	
 	this.draw = function() {
@@ -41,9 +46,9 @@ function MusicBoard() {
 				var circle = this.paper.circle(i*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5, j*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5, RADIUS_SMALL)
 									.attr({"stroke":COLOR, "fill":COLOR});
 				
-				(function(circle, space){
-					circle.click(function(){changeBoard(space)});
-				})(circle, i+","+j);
+				(function(context, circle, space){
+					circle.click(function(){context.sendChange(space)});
+				})(this, circle, i+","+j);
 									
 				circle.hover(
 					function(){
@@ -85,12 +90,12 @@ function MusicBoard() {
 		}
 	};
 	
-	this.play = function(obj) {
-		var previousColumn = obj.currentColumn;
-		obj.currentColumn = (obj.currentColumn + 1) % width;
+	this.play = function() {
+		var previousColumn = this.currentColumn;
+		this.currentColumn = (this.currentColumn + 1) % width;
 
-		obj.verticalSets[obj.currentColumn].animate({"r":RADIUS_MEDIUM}, 50, ">");		
-		obj.verticalSets[previousColumn].animate({"r":RADIUS_SMALL}, 50, ">");		
+		this.verticalSets[this.currentColumn].animate({"r":RADIUS_MEDIUM}, 50, ">");		
+		this.verticalSets[previousColumn].animate({"r":RADIUS_SMALL}, 50, ">");		
 		
 		/*
 		obj.verticalSets[obj.currentColumn].animate({"stroke":COLOR_OVER, "fill":COLOR_OVER}, 50, ">");		
@@ -98,15 +103,44 @@ function MusicBoard() {
 		*/
 	};
 
+	this.join = function(boardId) {
+		$.ajax({
+			cache : false,
+			type : "GET",
+			dataType : "json",
+			url : "/join",
+			data : {groupId : this.boardId},
+			error : this.onJoinError,
+			success : this.onJoinSuccess
+		});
+	};
+
 	this.update = function() {
+		//this.since =123;
 		$.ajax({
 			cache : false,
 			type : "GET",
 			url : "/data", 
 			dataType : "json",
-			data : {userId : userId, since : SINCE},
+			data : {userId : this.userId, since : this.since },
 			error : this.onUpdateError,
 			success : this.onUpdateSuccess
+		});
+	};
+
+	this.sendChange = function(space) {
+		$.ajax({
+			cache : false,
+			type : "GET",
+			url: "/send",
+			dataType: "json",
+			data: {userId : this.userId, space : space},
+			error: function(data) {
+				console.log(data.responseText);
+			},
+			success: function(data) {
+				
+			}
 		});
 	};
 
@@ -116,15 +150,34 @@ function MusicBoard() {
 			type : "GET",
 			url : "/leave", 
 			dataType : "json",
-			data : {userId : userId, groupId : boardId},
+			data : {userId : this.userId, groupId : this.boardId},
 			success : function() {
 				
 			}
 		});
 	},
 
+	this.onJoinSuccess = function(data) {
+		this.userId = data.userId;
+		this.boardId = data.boardId;
+		this.populateBoard(data.changes);
+
+		$("#boardId").html(data.boardId);
+
+		setInterval(
+			this.play, 
+			250
+		);
+
+		this.update();
+	};
+
+	this.onJoinError = function(data) {
+		console.log('error');
+	};
+
 	this.onUpdateSuccess = function(data) {
-		SINCE = (new Date()).getTime()
+		this.since = (new Date()).getTime()
 		transmission_errors = 0;
 
 		this.populateBoard(data.changes);
@@ -136,6 +189,6 @@ function MusicBoard() {
 		console.log(data);
 		//transmission_errors += 1;
 		//don't flood the servers on error, wait 10 seconds before retrying
-		setTimeout(update, 10*1000);
+		setTimeout(this.update, 10*1000);
 	};
 };

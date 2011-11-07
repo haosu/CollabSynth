@@ -2,6 +2,7 @@
 <head>
 	<link rel="stylesheet" href="reset.css" type="text/css"/>
 	<link rel="stylesheet" href="style.css" type="text/css"/>
+	<script src="underscore.js" type="text/javascript"></script>
 	<script src="http://code.jquery.com/jquery-1.6.1.min.js" type="text/javascript"></script>
 	<script src="client-board.js" type="text/javascript"></script>
 	<script src="client.js" type="text/javascript"></script>
@@ -12,14 +13,16 @@
 <body>
 	
 	
-	<div id="container">
+	<div class="container">
 		<div id="boardId"></div>
+		<div class="board_container inner">
+		</div>
 	</div>
 
 	<div class="container">
 		<div id="signInBox" class="signin_container">
-			<div id="joinButton">Join</div>
 			<input id="groupName" type="text" name="groupName" placeholder="Choose a group (optional)"/>
+			<div id="joinButton">Join</div>
 		</div>
 	</div>
 
