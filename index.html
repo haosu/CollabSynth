@@ -12,31 +12,35 @@
 
 <body>
 	
-	
-	<div class="container">
-		<div id="boardId"></div>
-		<div class="board_container inner">
+	<div class="container header">
+		<div class="inner shadow">
+			<div>
+				YO!
+			</div>
+			<div>
+			</div>
 		</div>
 	</div>
 
 	<div class="container">
-		<div id="signInBox" class="signin_container">
-			<input id="groupName" type="text" name="groupName" placeholder="Choose a group (optional)"/>
-			<div id="joinButton">Join</div>
+		<div class="board_container inner shadow rounded">
 		</div>
 	</div>
 
-	<div class="container footer">
-		<div class="inner">
-			Yo!
+	<div class="container">
+		<div id="signin_box" class="signin_container">
+			<input id="group_name" class="rounded" type="text" placeholder="Choose a group (optional)"/>
+			<div id="join_button" class="blue_button rounded">Join</div>
 		</div>
 	</div>
-
 
 	<script id="board-template" type="text/x-handlebars-template">
+		<div class="board_info">
+			<div class="board_id">
+		  </div>
+		</div>
+		
 	  <div class="board">
-	  </div>
-	  <div class="boardId">
 	  </div>
 	</script>
 

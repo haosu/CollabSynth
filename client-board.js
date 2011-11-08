@@ -20,7 +20,7 @@ function MusicBoard() {
 	var template;
 	var container;
 	
-	this.init = function() {
+	this.init = function(boardId) {
 		_.bindAll(this)
 
 		this.currentColumn = -1;
@@ -32,6 +32,7 @@ function MusicBoard() {
 
     this.container = $("<div class='board_inner'>").html(this.template());
 
+    this.boardId = boardId;
     this.since = 0;
 	};
 	
@@ -103,7 +104,7 @@ function MusicBoard() {
 		*/
 	};
 
-	this.join = function(boardId) {
+	this.join = function() {
 		$.ajax({
 			cache : false,
 			type : "GET",
@@ -162,7 +163,7 @@ function MusicBoard() {
 		this.boardId = data.boardId;
 		this.populateBoard(data.changes);
 
-		$("#boardId").html(data.boardId);
+		this.container.find(".board_id").html(data.boardId);
 
 		setInterval(
 			this.play, 

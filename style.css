@@ -1,15 +1,16 @@
 body {
 	background-color : white;
 	font-family : sans-serif;
+	border-bottom : 50px solid #333;
 }
 
 div {
-	border-radius : 5px;
-	-moz-border-radius : 5px;
+
 }
 
 .footer {
-	bottom : 0;
+	position:absolute;
+  bottom:0;
 	margin-top: 20px;
 	border-top: 5px solid white;
 	background-color:#ccc;
@@ -19,7 +20,34 @@ div {
 
 .container {
 	width : 100%;
-	margin-top : 20px;
+	margin-top : 60px;
+}
+
+.container.header {
+	position : fixed;
+	top : 0;
+	left : 0;
+	margin-top: 0px;
+}
+
+.container.header .inner {
+	width : 850px;
+	background: linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(224, 224, 244, 0.18)), color-stop(100%, rgba(212, 212, 212, 0.18)));
+	background: -webkit-linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: -moz-linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: -o-linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: -ms-linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	color: #555;
+	text-shadow: white 0 1px 0;
+	border-bottom-right-radius : 5px;	
+	-moz-border-radius-bottomright : 5px;
+	border-bottom-left-radius	: 5px;
+	-moz-border-radius-bottomleft : 5px;
+
+	padding : 10px;
+	height : 20px;
 }
 
 .container .inner {
@@ -30,16 +58,19 @@ div {
 .container .board_container {
 	width : 850px;
 	margin : auto;
-	height : 420px;
+	height : 520px;
 	background-color : #2c2c2c;
-	padding-top : 100px;
 }
 
 .container .board_container .board_inner {
 	width : 805px;
 	margin : auto;
 	height : 400px;
+	padding-top : 50px;
+}
 
+.container .board_container .board_info {
+	height:50px;
 }
 
 .signin_container {
@@ -48,24 +79,68 @@ div {
 	margin-top : 20px;
 }
 
-#signInBox {
+#signin_box {
 	width : 415px;
 	color : #ddd;
 }
 
-#signInBox #groupName {
+#signin_box #group_name {
 	width : 300px;
 	font-size : 18px;
 	display : inline-block;
 	height : 40px;
 }
 
-#signInBox #joinButton {
-	border : 1px solid darkgreen;
+#signin_box #join_button {
 	font-size : 18px;
 	text-align : center;
-	background-color: green;
 	display : inline-block;
 	width : 75px;
 	padding : 10px;
+}
+
+.rounded {
+	border-radius : 5px;
+	-moz-border-radius : 5px;
+}
+
+.shadow {
+	box-shadow: rgba(0,0,0,0.15) 0px 4px 8px,#fff 0px 1px 0px inset;
+}
+
+.blue_button {
+	text-shadow: rgba(0, 0, 0, 0.33) 0px -1px 1px;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3694df), color-stop(100%, #0167d8));
+	background-image: -webkit-linear-gradient(#3694df, #0167d8);
+	background-image: -moz-linear-gradient(#3694df, #0167d8);
+	background-image: -o-linear-gradient(#3694df, #0167d8);
+	background-image: -ms-linear-gradient(#3694df, #0167d8);
+	background-image: linear-gradient(#3694df, #0167d8);
+	background-color: #0167D8;
+	background-position: 0 0;
+	-moz-box-shadow: #73a5e2 0px 1px 0px inset;
+	-webkit-box-shadow: #73a5e2 0px 1px 0px inset;
+	-o-box-shadow: #73a5e2 0px 1px 0px inset;
+	box-shadow: #73a5e2 0px 1px 0px inset;
+	border: 1px solid #00489A;
+}
+
+.grey_button {
+	background: linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(224, 224, 244, 0.18)), color-stop(100%, rgba(212, 212, 212, 0.18)));
+	background: -webkit-linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: -moz-linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: -o-linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: -ms-linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	background: linear-gradient(rgba(224, 224, 244, 0.18), rgba(212, 212, 212, 0.18));
+	-moz-box-shadow: white 0 1px 0 inset;
+	-webkit-box-shadow: white 0 1px 0 inset;
+	-o-box-shadow: white 0 1px 0 inset;
+	box-shadow: white 0 1px 0 inset;
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	color: #555;
+	text-shadow: white 0 1px 0;
+	text-shadow: 0px 1px 1px #111;
+	text-align: center;
+	cursor: pointer;
 }

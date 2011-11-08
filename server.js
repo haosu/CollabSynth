@@ -226,8 +226,8 @@ fu.get("/client-board.js", fu.staticHandler("client-board.js"));
 fu.get("/backbone.js", fu.staticHandler("backbone.js"));
 fu.get("/handlebars.js", fu.staticHandler("handlebars.js"));
 fu.get("/underscore.js", fu.staticHandler("underscore.js"));
-  
-  
+   
+    
 // send
 fu.get("/send", function(req, res) {
 	var userId = qs.parse(url.parse(req.url).query).userId;
@@ -238,19 +238,18 @@ fu.get("/send", function(req, res) {
 		res.simpleJSON(400, {responseText : "User not found. " + userId});
 		return;
 	}
-	
+	 
 	// fi nd group
 	var groupId = users[userId].groupId;
-	var change = new BoardChange();
-	
+	var change = new BoardChange(); 
+ 	
 	change.space = space;
 	change.timestamp = (new Date()).getTime();
 	groups[groupId].update(change);
 	
 	res.simpleJSON(200, { });
 });
-
-
+  
 // LOL THIS IS SO BAD! MAKE THESE FUNCTIONS MODULAR
 // next, previous, or id
 fu.get("/switchGroup", function(req, res){
@@ -353,7 +352,7 @@ fu.get("/join", function(req, res) {
 			break;
 		}
 	}
-
+  
 	sys.puts("JOIN | Trying to join " + groupId);
 
 	// GET GROUP
@@ -369,16 +368,16 @@ fu.get("/join", function(req, res) {
 	}
 
 	sys.puts('JOIN | Group is ' + groupId);
-
-
+ 
+ 
 	// add to group
 	var user = new User();
 	user.id = userId;
 	user.groupId = groupId;
 	users[userId] = user;
-
+ 
 	group.users.push(userId);
-	
+	 
 	res.simpleJSON(200, { userId : userId, 
 												boardId : groupId,
 												changes : group.exportBoard() 
