@@ -69,8 +69,16 @@ div {
 	padding-top : 50px;
 }
 
-.container .board_container .board_info {
+.container .board_container .board_inner .board_info {
 	height:50px;
+	font-size : 24px;
+	color : white;
+}
+
+.container .board_container .board_inner .board_info .board_id, 
+.container .board_container .board_inner .board_info .user_count {
+	display : inline-block;
+	margin-right:20px;
 }
 
 .signin_container {

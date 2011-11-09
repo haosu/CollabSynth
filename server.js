@@ -368,7 +368,7 @@ fu.get("/join", function(req, res) {
 	}
 
 	sys.puts('JOIN | Group is ' + groupId);
- 
+   
  
 	// add to group
 	var user = new User();
@@ -377,7 +377,7 @@ fu.get("/join", function(req, res) {
 	users[userId] = user;
  
 	group.users.push(userId);
-	 
+	  
 	res.simpleJSON(200, { userId : userId, 
 												boardId : groupId,
 												changes : group.exportBoard() 
@@ -386,7 +386,7 @@ fu.get("/join", function(req, res) {
 
 // leave
 fu.get("/leave", function(req, res) {
-	var userId = qs.parse(url.parse(req.url).query).userId;
+	var userId = qs.parse(url.parse(req.url).query).userId; 
 	var groupId = qs.parse(url.parse(req.url).query).groupId;
 
 	// if session exists
@@ -405,6 +405,5 @@ fu.get("/leave", function(req, res) {
 	res.simpleJSON(200, {});
 });
 
-
-
-
+ 
+ 
