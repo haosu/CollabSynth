@@ -38,13 +38,13 @@ function MusicBoard() {
 	
 	this.draw = function() {
 		var boardDiv = this.container.find(".board")[0];
-		this.paper = Raphael(boardDiv, width*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5, height*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5);
+		this.paper = Raphael(boardDiv, width*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+10, height*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+10);
 		
 		for(var i=0; i<width; i++) {
 			this.verticalSets[i] = this.paper.set();
 			
 			for(var j=0; j<height; j++) {
-				var circle = this.paper.circle(i*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5, j*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+5, RADIUS_SMALL)
+				var circle = this.paper.circle(i*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+10, j*(RADIUS_SMALL+RADIUS_LARGE)+(RADIUS_SMALL+1)+10, RADIUS_SMALL)
 									.attr({"stroke":COLOR, "fill":COLOR});
 				
 				(function(context, circle, space){

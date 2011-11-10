@@ -2,6 +2,7 @@ body {
 	background-color : white;
 	font-family : sans-serif;
 	border-bottom : 50px solid #333;
+	min-height : 750px;
 }
 
 div {
@@ -46,8 +47,12 @@ div {
 	border-bottom-left-radius	: 5px;
 	-moz-border-radius-bottomleft : 5px;
 
-	padding : 10px;
+	padding : 10px 20px;
 	height : 20px;
+}
+
+.container.header .inner div {
+	display : inline-block;
 }
 
 .container .inner {
@@ -63,7 +68,7 @@ div {
 }
 
 .container .board_container .board_inner {
-	width : 805px;
+	width : 800px;
 	margin : auto;
 	height : 400px;
 	padding-top : 50px;
@@ -71,14 +76,26 @@ div {
 
 .container .board_container .board_inner .board_info {
 	height:50px;
-	font-size : 24px;
+	font-size : 18px;
 	color : white;
+	margin : 0px 10px;
 }
 
+.container .board_container .board_inner .board_info div {
+	display : inline-block;
+	margin-right:20px;
+}
+
+/*
 .container .board_container .board_inner .board_info .board_id, 
 .container .board_container .board_inner .board_info .user_count {
 	display : inline-block;
 	margin-right:20px;
+}
+*/
+
+.container .board_container .board_inner .board {
+	margin-left : -5px;
 }
 
 .signin_container {
@@ -151,4 +168,14 @@ div {
 	text-shadow: 0px 1px 1px #111;
 	text-align: center;
 	cursor: pointer;
+}
+
+.dark_gradient {
+	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3C3C3C), color-stop(100%, #151515));
+	background: -webkit-linear-gradient(#3C3C3C, #151515);
+	background: -moz-linear-gradient(#3C3C3C, #151515);
+	background: -o-linear-gradient(#3C3C3C, #151515);
+	background: -ms-linear-gradient(#3C3C3C, #151515);
+	background: linear-gradient(#3C3C3C, #151515);
+	background-color: #3C3C3C;
 }

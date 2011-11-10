@@ -97,8 +97,7 @@ function listGroups() {
 	for(var i in groups) {
 		str += i + ' ';
 	}
-
-}
+} 
 
 function joinGroup(groups, users, userId, groupId) {
 	if(!groupId || groupId=='') {
@@ -109,7 +108,7 @@ function joinGroup(groups, users, userId, groupId) {
 			break;
 		}
 	}
-
+  
 	// GET GROUP
 	var group = groups[groupId];
 	if(!groupId || !group) {
@@ -119,7 +118,7 @@ function joinGroup(groups, users, userId, groupId) {
 		group.init();
 		groups[groupId] = group;
 	}
-
+ 
 	sys.puts('JOIN | Group is ' + groupId);
 	/*
 	sys.puts(this.groups);
@@ -226,6 +225,9 @@ fu.get("/client-board.js", fu.staticHandler("client-board.js"));
 fu.get("/backbone.js", fu.staticHandler("backbone.js"));
 fu.get("/handlebars.js", fu.staticHandler("handlebars.js"));
 fu.get("/underscore.js", fu.staticHandler("underscore.js"));
+fu.get("/audio.js", fu.staticHandler("audio.js"));
+fu.get("/jsfx.js", fu.staticHandler("jsfx.js"));
+fu.get("/jsfxlib.js", fu.staticHandler("jsfxlib.js"));
    
     
 // send
@@ -383,7 +385,7 @@ fu.get("/join", function(req, res) {
 												changes : group.exportBoard() 
 											});
 });
-
+ 
 // leave
 fu.get("/leave", function(req, res) {
 	var userId = qs.parse(url.parse(req.url).query).userId; 
