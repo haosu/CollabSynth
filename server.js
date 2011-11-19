@@ -190,10 +190,10 @@ function getGroup(groups, id, option) {
 		break;
 	}
 	*/
-}
+}  
+ 
 
-
-
+ 
 var createGroup = function(groupId) {
 	if(groupId==undefined || groups[groupId]==undefined) {
 		groupId = Math.floor(Math.random()*99999999999).toString();
@@ -206,9 +206,9 @@ var createGroup = function(groupId) {
 	return group;
 };
 
+ 
+ 
 
- 
- 
 var msg = "";
 var users = {};
 var groups = {};

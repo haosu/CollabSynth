@@ -16,6 +16,7 @@ function MusicBoard() {
 	var boardId;
 	var userId;
 	var since = 0;
+	var playInterval;
 
 	var template;
 	var container;
@@ -98,6 +99,15 @@ function MusicBoard() {
 		this.verticalSets[this.currentColumn].animate({"r":RADIUS_MEDIUM}, 50, ">");		
 		this.verticalSets[previousColumn].animate({"r":RADIUS_SMALL}, 50, ">");		
 		
+		var fill = 0;
+		for(var i=0; i<height; i++) {
+			fill = this.verticalSets[this.currentColumn][i].attr("fill");
+
+			if(fill == COLOR_ACTIVE) {
+				samples[i].play();
+			}
+		}
+
 		/*
 		obj.verticalSets[obj.currentColumn].animate({"stroke":COLOR_OVER, "fill":COLOR_OVER}, 50, ">");		
 		obj.verticalSets[previousColumn].animate({"stroke":COLOR, "fill":COLOR}, 50, ">");		
@@ -165,10 +175,7 @@ function MusicBoard() {
 
 		this.container.find(".board_id").html(data.boardId);
 
-		setInterval(
-			this.play, 
-			250
-		);
+		this.playInterval = setInterval(this.play, 750);
 
 		this.update();
 	};
