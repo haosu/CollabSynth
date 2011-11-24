@@ -175,7 +175,7 @@ function MusicBoard() {
 
 		this.container.find(".board_id").html(data.boardId);
 
-		this.playInterval = setInterval(this.play, 750);
+		this.playInterval = setInterval(this.play, 400);
 
 		this.update();
 	};

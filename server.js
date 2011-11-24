@@ -147,7 +147,7 @@ function getGroup(groups, id, option) {
 
 	return retGroups;
 
-
+ 
 	/*
 	// search until current is found
 	// store previous and next
@@ -164,7 +164,6 @@ function getGroup(groups, id, option) {
 			break;
 		}
 	}
-
 	switch(option) {
 		// get previous
 		case -1 :
@@ -192,7 +191,7 @@ function getGroup(groups, id, option) {
 	*/
 }  
  
-
+ 
  
 var createGroup = function(groupId) {
 	if(groupId==undefined || groups[groupId]==undefined) {
@@ -228,6 +227,11 @@ fu.get("/underscore.js", fu.staticHandler("underscore.js"));
 fu.get("/audio.js", fu.staticHandler("audio.js"));
 fu.get("/jsfx.js", fu.staticHandler("jsfx.js"));
 fu.get("/jsfxlib.js", fu.staticHandler("jsfxlib.js"));
+fu.get("/pictos-web.eot", fu.staticHandler("pictos/pictos-web.eot"));
+fu.get("/pictos-web.svg", fu.staticHandler("pictos/pictos-web.svg"));
+fu.get("/pictos-web.ttf", fu.staticHandler("pictos/pictos-web.ttf"));
+fu.get("/pictos-web.woff", fu.staticHandler("pictos/pictos-web.woff"));
+fu.get("/pictos.css", fu.staticHandler("pictos/pictos.css"));
    
     
 // send
@@ -240,7 +244,7 @@ fu.get("/send", function(req, res) {
 		res.simpleJSON(400, {responseText : "User not found. " + userId});
 		return;
 	}
-	 
+	
 	// fi nd group
 	var groupId = users[userId].groupId;
 	var change = new BoardChange(); 
@@ -258,7 +262,7 @@ fu.get("/switchGroup", function(req, res){
 	var groupId = qs.parse(url.parse(req.url).query).groupId;
 	var userId = qs.parse(url.parse(req.url).query).userId;
 
-
+ 
 	// leave group
 	$.inArray(user.id, groups[userId].users);
 	user.groupId = '';

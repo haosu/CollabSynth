@@ -74,16 +74,26 @@ div {
 	padding-top : 50px;
 }
 
-.container .board_container .board_inner .board_info {
+.container .board_container .board_inner .board_header {
 	height:50px;
 	font-size : 18px;
 	color : white;
-	margin : 0px 10px;
 }
 
-.container .board_container .board_inner .board_info div {
+.container .board_container .board_inner .board_header .board_info {
+	margin : 0px 10px;
+	display : inline-block;
+}
+
+.container .board_container .board_inner .board_header .board_info div {
 	display : inline-block;
 	margin-right:20px;
+}
+
+.container .board_container .board_inner .board_header .board_actions {
+	font-family : Pictos;
+	display : inline-block;
+	padding-bottom : 4px;
 }
 
 /*
