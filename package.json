@@ -1,5 +1,5 @@
 { "name": "jquery",
- " version": "1.6.3",
+ "version": "1.6.3",
   "dependencies": 
    { "jsdom": ">=0.2.0",
      "htmlparser": ">= 1.7.3" }
