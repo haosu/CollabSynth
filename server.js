@@ -8,9 +8,8 @@ var starttime = (new Date()).getTime();
 var fu = require("./fu"),
     sys = require("sys"),
     url = require("url"),
-    qs = require("querystring"),
-    $ = require("jquery");
-    
+    qs = require("querystring");
+
 function BoardChange() {
 	var space = '';
 	var timestamp = '';
@@ -264,7 +263,7 @@ fu.get("/switchGroup", function(req, res){
 
  
 	// leave group
-	$.inArray(user.id, groups[userId].users);
+	//$.inArray(user.id, groups[userId].users);
 	user.groupId = '';
 
 
@@ -402,7 +401,7 @@ fu.get("/leave", function(req, res) {
 	}
 
 	// leave group
-	$.inArray(user.id, groups[userId].users);
+	//$.inArray(user.id, groups[userId].users);
 	user.groupId = '';
 
 	// user should be reaped later
