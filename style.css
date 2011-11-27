@@ -43,6 +43,7 @@ div {
 
 .tagline {
 	text-align : right !important;
+	width : 50% !important;
 }
 
 .container.header .inner {
