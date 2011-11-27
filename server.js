@@ -10,7 +10,7 @@ var fu = require("./fu"),
     url = require("url"),
     qs = require("querystring"),
     $ = require("jquery");
-
+    
 function BoardChange() {
 	var space = '';
 	var timestamp = '';
