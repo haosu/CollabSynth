@@ -9,7 +9,7 @@ var fu = require("./fu"),
     sys = require("sys"),
     url = require("url"),
     qs = require("querystring"),
-    $ = require("./node-jquery");
+    $ = require("jquery");
 
 function BoardChange() {
 	var space = '';
