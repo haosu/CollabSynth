@@ -9,6 +9,10 @@ div {
 
 }
 
+.pictos {
+	font-family : Pictos;
+}
+
 .footer {
 	position:absolute;
   bottom:0;
@@ -29,6 +33,16 @@ div {
 	top : 0;
 	left : 0;
 	margin-top: 0px;
+}
+
+.title {
+	color: #0167D8;
+	font-size : 24px;
+	font-weight : bold;
+}
+
+.tagline {
+	text-align : right !important;
 }
 
 .container.header .inner {
@@ -53,6 +67,8 @@ div {
 
 .container.header .inner div {
 	display : inline-block;
+	width: 49%;
+	text-align : left;
 }
 
 .container .inner {
@@ -81,8 +97,9 @@ div {
 }
 
 .container .board_container .board_inner .board_header .board_info {
-	margin : 0px 10px;
+	margin-left: 1%;
 	display : inline-block;
+	width: 49%;
 }
 
 .container .board_container .board_inner .board_header .board_info div {
@@ -93,7 +110,10 @@ div {
 .container .board_container .board_inner .board_header .board_actions {
 	font-family : Pictos;
 	display : inline-block;
-	padding-bottom : 4px;
+	padding-bottom : 3px;
+	width: 48%;
+	margin-right: 1%;
+	text-align:right;
 }
 
 /*

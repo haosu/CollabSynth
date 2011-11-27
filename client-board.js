@@ -35,6 +35,7 @@ function MusicBoard() {
 
     this.boardId = boardId;
     this.since = 0;
+    this.playInterval = -1;
 	};
 	
 	this.draw = function() {
@@ -104,6 +105,8 @@ function MusicBoard() {
 			fill = this.verticalSets[this.currentColumn][i].attr("fill");
 
 			if(fill == COLOR_ACTIVE) {
+				samples[i].pause();
+				samples[i].currentTime = 0;
 				samples[i].play();
 			}
 		}
@@ -112,6 +115,25 @@ function MusicBoard() {
 		obj.verticalSets[obj.currentColumn].animate({"stroke":COLOR_OVER, "fill":COLOR_OVER}, 50, ">");		
 		obj.verticalSets[previousColumn].animate({"stroke":COLOR, "fill":COLOR}, 50, ">");		
 		*/
+	};
+
+	this.start = function() {
+		if(this.playInterval==-1) {
+			this.playInterval = setInterval(this.play, 400);	
+		}
+	};
+
+	this.pause = function() {
+		window.clearInterval(this.playInterval);
+		this.playInterval = -1;
+	};
+
+	this.reset = function() {
+		
+	};
+
+	this.destroy = function() {
+		
 	};
 
 	this.join = function() {

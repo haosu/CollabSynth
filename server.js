@@ -14,7 +14,7 @@ var fu = require("./fu"),
 function BoardChange() {
 	var space = '';
 	var timestamp = '';
-};
+}; 
 
 function Group() {
 	var id = '';
@@ -29,7 +29,7 @@ function Group() {
 		this.callbacks = new Array();
 		this.board = {};
 	}
-	
+	 
 	this.getUpdates = function(since, callback) {
 		var sinceLast = [];
 		for (var i=0; i<changes.length; i++) {
@@ -337,9 +337,9 @@ fu.get("/data", function(req, res) {
 				});
 		});
 	
-});
+}); 
 
-
+ 
 // join
 fu.get("/join", function(req, res) {
 	// assign userId
@@ -372,10 +372,9 @@ fu.get("/join", function(req, res) {
 		group.init();
 		groups[groupId] = group;
 	}
-
+  
 	sys.puts('JOIN | Group is ' + groupId);
-   
- 
+  
 	// add to group
 	var user = new User();
 	user.id = userId;
@@ -389,7 +388,7 @@ fu.get("/join", function(req, res) {
 												changes : group.exportBoard() 
 											});
 });
- 
+   
 // leave
 fu.get("/leave", function(req, res) {
 	var userId = qs.parse(url.parse(req.url).query).userId; 

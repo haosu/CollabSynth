@@ -17,46 +17,41 @@ $().ready(function(){
   };
 
   samples = jsfxlib.createWaves(audioLibParams);
- 	//samples["1"].play();
- 	//samples["2"].play();
-  //samples2.b.play();
-
 
 	$("#join_button").click(function(){
-	boardId = $("#signin_box input").val();
-	init(boardId);
-		//join(boardId);
-		//$("#signInBox").remove();
+		boardId = $("#signin_box input").val();
+		init(boardId);
+
+
+		$("#play").click(function(){
+			musicBoard.start();
+		});
+		$("#pause").click(function(){
+			musicBoard.pause();
+		});
+		$("#reset").click(function(){
+			
+		});
+
 	});
 
-});
 
+	function init(boardId) {
+		musicBoard = new MusicBoard();
+		musicBoard.init(boardId);
+		musicBoard.join()
+		$(".board_container").append(musicBoard.container);
+		musicBoard.draw();
 
-function init(boardId) {
-	musicBoard = new MusicBoard();
-	musicBoard.init(boardId);
-	musicBoard.join()
-	$(".board_container").append(musicBoard.container);
-	musicBoard.draw();
-
-}
-
-function loadAudio() {
-	for(var i in audioUrls) {
-		//audioUrls[i];
-		//create new audio element with audioUrls[i] as source
-		//set id as audio-i
-		
 	}
-}
 
+	function loadAudio() {
+		for(var i in audioUrls) {
+			//audioUrls[i];
+			//create new audio element with audioUrls[i] as source
+			//set id as audio-i
+			
+		}
+	}
 
-$("#play").click(function(){
-	console.log("ADF");
-});
-$("#pause").click(function(){
-	
-});
-$("#reset").click(function(){
-	
 });
