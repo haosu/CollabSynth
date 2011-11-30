@@ -37,6 +37,10 @@ $().ready(function(){
 
 
 	function init(boardId) {
+		if(musicBoard) {
+			// remove
+			$(".board_container").html("");
+		}
 		musicBoard = new MusicBoard();
 		musicBoard.init(boardId);
 		musicBoard.join()

@@ -14,7 +14,7 @@ function BoardChange() {
 	var space = '';
 	var timestamp = '';
 }; 
-
+ 
 function Group() {
 	var id = '';
 	var users = [];
@@ -62,7 +62,7 @@ function Group() {
 			changes.shift();
 		}
 	};
-	 
+	
 	this.exportBoard = function() {
 		var change = new Array();
 		for(var i in board) {
@@ -75,8 +75,6 @@ function Group() {
 	};
 
 	this.leave = function(userId) {
-		sys.puts(userId);
-		sys.puts(this.users);
 		for(var i in this.users) {
 			if(this.users[i]==userId) {
 				this.users.splice(i, 1);
