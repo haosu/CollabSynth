@@ -88,8 +88,10 @@ function MusicBoard() {
 	this.populateBoard = function(changes) {
 		var change;
 		for(var i in changes) {
-			change = changes[i].space || changes[i];
-			musicBoard.toggle(change);
+			change = changes[i];
+			if(change) {
+				musicBoard.toggle(change);
+			}
 		}
 	};
 	
@@ -196,6 +198,7 @@ function MusicBoard() {
 		this.populateBoard(data.changes);
 
 		this.container.find(".board_id").html(data.boardId);
+		this.container.find(".user_count_field").html(data.userCount);
 
 		this.playInterval = setInterval(this.play, 400);
 
@@ -211,6 +214,7 @@ function MusicBoard() {
 		transmission_errors = 0;
 
 		this.populateBoard(data.changes);
+		this.container.find(".user_count_field").html(data.userCount);
 
 		this.update();
 	};

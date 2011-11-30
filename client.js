@@ -54,4 +54,8 @@ $().ready(function(){
 		}
 	}
 
+	$(window).bind('beforeunload', function(){
+	  musicBoard.leave();
+	});
+
 });

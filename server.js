@@ -44,24 +44,25 @@ function Group() {
 		else {
 			callbacks.push({ timestamp : new Date(), callback : callback });
 		}
-	};
+	}; 
 	
 	// adds change to changes queue, and pops all of the callbacks
 	// this sends each individual change as it's own response
 	// should add to a queue
 	this.update = function(change) {
-		changes.push(change);
-		board[change.space] = !board[change.space];
-
+		if(change) {
+			changes.push(change);
+			board[change.space] = !board[change.space];
+		}
 		while(callbacks.length > 0) {
-			callbacks.shift().callback( id, [change] );
+			callbacks.shift().callback( this.id, [change], this.users.length );
 		}
 		
 		while(changes.length > 0) {
 			changes.shift();
 		}
 	};
-	
+	 
 	this.exportBoard = function() {
 		var change = new Array();
 		for(var i in board) {
@@ -72,6 +73,19 @@ function Group() {
 		
 		return change;
 	};
+
+	this.leave = function(userId) {
+		sys.puts(userId);
+		sys.puts(this.users);
+		for(var i in this.users) {
+			if(this.users[i]==userId) {
+				this.users.slice(i, 1);
+			}
+		}
+		sys.puts(this.users);
+
+		this.destroy();
+	}
 	
 	this.destroy = function() {
 		if(users.length < 1) {
@@ -119,11 +133,6 @@ function joinGroup(groups, users, userId, groupId) {
 	}
  
 	sys.puts('JOIN | Group is ' + groupId);
-	/*
-	sys.puts(this.groups);
-	sys.puts(groups);
-	sys.puts(groups[groupId].id);
-	*/
 
 	return group;
 }
@@ -145,49 +154,6 @@ function getGroup(groups, id, option) {
 
 
 	return retGroups;
-
- 
-	/*
-	// search until current is found
-	// store previous and next
-	var groupKeyArr = Object.getKeys(groups);
-	var groupKeyArrLength = groupKeyArr.length;
-
-	var previousId, nextId;
-
-
-	for(var i=0; i<groupKeyArrLength; i++) {
-		if(groupKeyArr == id) {
-			previousId = groupKeyArr[(i-1) % groupKeyArrLength];
-			nextId = groupKeyArr[(i+1) % groupKeyArrLength];
-			break;
-		}
-	}
-	switch(option) {
-		// get previous
-		case -1 :
-			return [groups[previousId], groups[id]];
-		break;
-
-		// current
-		case 0 : 
-			return groups[id];
-		break;
-
-		// get next
-		case 1 :
-			return [groups[id], groups[nextId]];
-		break;
-
-		// previous and next
-		case 2 :
-			return [groups[previousId], groups[id], groups[nextId]];
-		break;
-
-		default :
-		break;
-	}
-	*/
 }  
  
  
@@ -329,10 +295,11 @@ fu.get("/data", function(req, res) {
 		return;
 	}
 	
-	groups[users[userId].groupId].getUpdates(since, function(boardId, changes) {
+	groups[users[userId].groupId].getUpdates(since, function(boardId, changes, userCount) {
 			res.simpleJSON(200, 
 				{ changes : changes,
-					boardId : boardId
+					boardId : boardId,
+					userCount : userCount
 				});
 		});
 	
@@ -381,10 +348,12 @@ fu.get("/join", function(req, res) {
 	users[userId] = user;
  
 	group.users.push(userId);
+	group.update();
 	  
 	res.simpleJSON(200, { userId : userId, 
 												boardId : groupId,
-												changes : group.exportBoard() 
+												changes : group.exportBoard(),
+												userCount : group.users.length
 											});
 });
    
@@ -401,8 +370,9 @@ fu.get("/leave", function(req, res) {
 	}
 
 	// leave group
-	//$.inArray(user.id, groups[userId].users);
-	user.groupId = '';
+	group = groups[groupId];
+	group.leave(userId);
+	group.update();
 
 	// user should be reaped later
 
