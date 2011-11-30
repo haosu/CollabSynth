@@ -79,7 +79,7 @@ function Group() {
 		sys.puts(this.users);
 		for(var i in this.users) {
 			if(this.users[i]==userId) {
-				this.users.slice(i, 1);
+				this.users.splice(i, 1);
 			}
 		}
 		sys.puts(this.users);
