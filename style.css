@@ -13,15 +13,6 @@ div {
 	font-family : Pictos;
 }
 
-.footer {
-	position:absolute;
-  bottom:0;
-	margin-top: 20px;
-	border-top: 5px solid white;
-	background-color:#ccc;
-	width : 805px;
-	height : 200px;
-}
 
 .container {
 	width : 100%;
@@ -70,6 +61,26 @@ div {
 	display : inline-block;
 	width: 49%;
 	text-align : left;
+}
+
+.container.footer {
+	width: 100%;
+	background-color: #333;
+	color: #aaa;
+}
+
+.container.footer .footer_content div {
+	width: 32%;
+	text-align : center;
+	display:inline-block;
+}
+
+.container.footer .footer_content {
+	width : 850px;
+	margin : auto;
+	height : 30px;
+	padding-top: 10px;
+	font-size : 10px;
 }
 
 .container .inner {

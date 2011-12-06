@@ -1,7 +1,7 @@
 HOST = null; // localhost
 PORT = 1337;
 
-   
+  
 // when the daemon started
 var starttime = (new Date()).getTime();
 
@@ -28,7 +28,7 @@ function Group() {
 		this.callbacks = new Array();
 		this.board = {};
 	}
-	 
+	
 	this.getUpdates = function(since, callback) {
 		var sinceLast = [];
 		for (var i=0; i<changes.length; i++) {
@@ -181,7 +181,8 @@ fu.get("/", fu.staticHandler("index.html"));
 fu.get("/style.css", fu.staticHandler("style.css"));
 fu.get("/reset.css", fu.staticHandler("reset.css"));
 fu.get("/client.js", fu.staticHandler("client.js"));
-fu.get("/jquery-1.2.6.min.js", fu.staticHandler("jquery-1.2.6.min.js"));
+fu.get("/jquery.js", fu.staticHandler("jquery.js"));
+fu.get("/jquery-footer.js", fu.staticHandler("jquery-footer.js"));
 fu.get("/raphael.js", fu.staticHandler("raphael.js"));
 fu.get("/client-board.js", fu.staticHandler("client-board.js"));
 fu.get("/backbone.js", fu.staticHandler("backbone.js"));
@@ -195,7 +196,7 @@ fu.get("/pictos-web.svg", fu.staticHandler("pictos/pictos-web.svg"));
 fu.get("/pictos-web.ttf", fu.staticHandler("pictos/pictos-web.ttf"));
 fu.get("/pictos-web.woff", fu.staticHandler("pictos/pictos-web.woff"));
 fu.get("/pictos.css", fu.staticHandler("pictos/pictos.css"));
-   
+  
     
 // send
 fu.get("/send", function(req, res) {
@@ -354,7 +355,7 @@ fu.get("/join", function(req, res) {
 												userCount : group.users.length
 											});
 });
-   
+
 // leave
 fu.get("/leave", function(req, res) {
 	var userId = qs.parse(url.parse(req.url).query).userId; 
@@ -376,6 +377,4 @@ fu.get("/leave", function(req, res) {
 
 	res.simpleJSON(200, {});
 });
-
- 
  

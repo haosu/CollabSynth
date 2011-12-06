@@ -3,6 +3,7 @@ var musicBoard;
 var audioUrls = [];
 
 $().ready(function(){
+	$("#footer").pinFooter();
 
 	// I didn't include the full array
   audioLibParams = {
