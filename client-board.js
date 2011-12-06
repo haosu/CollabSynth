@@ -70,8 +70,7 @@ function MusicBoard() {
 	};
 	
 	this.toggle = function(space) {
-		var sp = space || space.space;
-		var coords = sp.split(',');
+		var coords = space.space.split(',');
 		var x = parseInt(coords[0]);
 		var y = parseInt(coords[1]);
 

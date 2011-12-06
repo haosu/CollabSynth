@@ -13,7 +13,7 @@ var fu = require("./fu"),
 function BoardChange() {
 	var space = '';
 	var timestamp = '';
-}; 
+};
  
 function Group() {
 	var id = '';
@@ -45,7 +45,7 @@ function Group() {
 			callbacks.push({ timestamp : new Date(), callback : callback });
 		}
 	}; 
-	
+
 	// adds change to changes queue, and pops all of the callbacks
 	// this sends each individual change as it's own response
 	// should add to a queue
@@ -67,7 +67,7 @@ function Group() {
 		var change = new Array();
 		for(var i in board) {
 			if(board[i] == true) {
-				change.push(i);
+				change.push({space:i, timestamp:0});
 			}
 		}
 		

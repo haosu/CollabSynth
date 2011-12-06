@@ -44,6 +44,7 @@ $().ready(function(){
 		musicBoard = new MusicBoard();
 		musicBoard.init(boardId);
 		musicBoard.join()
+		$(".board_container").html("");
 		$(".board_container").append(musicBoard.container);
 		musicBoard.draw();
 
