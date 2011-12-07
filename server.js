@@ -224,6 +224,11 @@ fu.get("/refresh", function(req, res){
 	var groupId = qs.parse(url.parse(req.url).query).groupId;
 	var group = groups[groupId];
 
+	if(group==undefined) {
+		res.simpleJSON(400, {responseText : "Group not found."});
+		return;
+	}
+
 	res.simpleJSON(200, { changes : group.exportBoard(),
 												userCount : group.users.length
 											});
@@ -232,7 +237,6 @@ fu.get("/refresh", function(req, res){
 // data
 fu.get("/data", function(req, res) {
 	//listGroups();
-
 	var since = qs.parse(url.parse(req.url).query).since;
 	var userId = qs.parse(url.parse(req.url).query).userId;
 
@@ -241,13 +245,12 @@ fu.get("/data", function(req, res) {
 		return;
 	}
 
-	
 	// if session exists
 	if(users[userId]==undefined) {
 		res.simpleJSON(400, {responseText : "User not found."});
 		return;
 	}
-	
+	 
 	groups[users[userId].groupId].getUpdates(since, function(boardId, changes, userCount) {
 			res.simpleJSON(200, 
 				{ changes : changes,
@@ -255,7 +258,6 @@ fu.get("/data", function(req, res) {
 					userCount : userCount
 				});
 		});
-	
 }); 
 
  

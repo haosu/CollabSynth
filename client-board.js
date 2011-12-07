@@ -69,18 +69,20 @@ function MusicBoard() {
 		
 	};
 	
-	this.toggle = function(space) {
+	this.toggle = function(space, pAnimTime) {
+		var animTime = pAnimTime || 250;
+
 		var coords = space.space.split(',');
 		var x = parseInt(coords[0]);
 		var y = parseInt(coords[1]);
 
 		if(this.verticalSets[x][y].attr("fill")==COLOR_ACTIVE) {
 			this.verticalSets[x][y]
-				.animate({"stroke":COLOR, "fill":COLOR}, 250, ">");
+				.animate({"stroke":COLOR, "fill":COLOR}, animTime, ">");
 		}
 		else {
 			this.verticalSets[x][y]
-				.animate({"stroke":COLOR_ACTIVE, "fill":COLOR_ACTIVE}, 250, ">");
+				.animate({"stroke":COLOR_ACTIVE, "fill":COLOR_ACTIVE}, animTime, ">");
 		}
 		
 	};
@@ -132,7 +134,12 @@ function MusicBoard() {
 
 	this.reset = function() {
 		for(var i=0; i<width; i++) {
-			this.verticalSets[0].attr({"fill":COLOR});
+			this.verticalSets[i].attr({"stroke":COLOR, "fill":COLOR});
+			/*
+			for(var j=0; j<height; j++) {
+				
+			}
+			*/
 		} 
 	};
 
@@ -217,6 +224,7 @@ function MusicBoard() {
 		this.playInterval = setInterval(this.play, 400);
 
 		this.update();
+		this.refreshInterval = setInterval(this.refresh, 5000);
 	};
 
 	this.onJoinError = function(data) {
@@ -242,7 +250,7 @@ function MusicBoard() {
 
 	this.onRefreshSuccess = function(data) {
 		this.reset();
-		this.populateBoard(data.changes);
+		this.populateBoard(data.changes, 0);
 	};
 
 	this.onRefreshError = function(data) {
