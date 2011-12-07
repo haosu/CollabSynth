@@ -220,64 +220,18 @@ fu.get("/send", function(req, res) {
 	res.simpleJSON(200, { });
 });
   
-// LOL THIS IS SO BAD! MAKE THESE FUNCTIONS MODULAR
-// next, previous, or id
-fu.get("/switchGroup", function(req, res){
+fu.get("/refresh", function(req, res){
 	var groupId = qs.parse(url.parse(req.url).query).groupId;
-	var userId = qs.parse(url.parse(req.url).query).userId;
-
- 
-	// leave group
-	//$.inArray(user.id, groups[userId].users);
-	user.groupId = '';
-
-
-
-	// check if group exists
-	if(!groupId || groupId=='') {
-		// assign to random group
-		for(i in groups) {
-			// should not be at max capacity
-			groupId = i;
-			break;
-		}
-	}
-
-	// GET GROUP
 	var group = groups[groupId];
-	if(!groupId || !group) {
-		groupId = Math.floor(Math.random()*99999999999).toString();
-		group = new Group();
-		group.id = groupId;
-		group.init();
-		groups[groupId] = group;
-	}
 
-
-	sys.puts('JOIN | Group is ' + groupId);
-
-
-	// add to group
-	var user = new User();
-	user.id = userId;
-	user.groupId = groupId;
-	users[userId] = user;
-
-	group.users.push(userId);
-
-  
-
-
-	res.simpleJSON(200, { userId : userId, 
-											boardId : groupId,
-											changes : group.exportBoard() 
-										});
+	res.simpleJSON(200, { changes : group.exportBoard(),
+												userCount : group.users.length
+											});
 });
 
 // data
 fu.get("/data", function(req, res) {
-	listGroups();
-
+	//listGroups();
 
 	var since = qs.parse(url.parse(req.url).query).since;
 	var userId = qs.parse(url.parse(req.url).query).userId;
@@ -374,7 +328,7 @@ fu.get("/leave", function(req, res) {
 	group.update();
 
 	// user should be reaped later
-
 	res.simpleJSON(200, {});
 });
+
  

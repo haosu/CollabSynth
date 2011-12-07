@@ -69,18 +69,13 @@ div {
 	color: #aaa;
 }
 
-.container.footer .footer_content div {
-	width: 32%;
-	text-align : center;
-	display:inline-block;
-}
-
 .container.footer .footer_content {
 	width : 850px;
 	margin : auto;
 	height : 30px;
 	padding-top: 10px;
 	font-size : 10px;
+	text-align : center;
 }
 
 .container .inner {

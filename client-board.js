@@ -131,11 +131,25 @@ function MusicBoard() {
 	};
 
 	this.reset = function() {
-		
+		for(var i=0; i<width; i++) {
+			this.verticalSets[0].attr({"fill":COLOR});
+		} 
 	};
 
 	this.destroy = function() {
 		
+	};
+
+	this.refresh = function() {
+		$.ajax({
+			cache : false,
+			type : "GET",
+			dataType : "json",
+			url : "/refresh",
+			data : {groupId : this.boardId},
+			error : this.onRefreshError,
+			success : this.onRefreshSuccess
+		});
 	};
 
 	this.join = function() {
@@ -224,5 +238,14 @@ function MusicBoard() {
 		//transmission_errors += 1;
 		//don't flood the servers on error, wait 10 seconds before retrying
 		setTimeout(this.update, 10*1000);
+	};
+
+	this.onRefreshSuccess = function(data) {
+		this.reset();
+		this.populateBoard(data.changes);
+	};
+
+	this.onRefreshError = function(data) {
+		
 	};
 };
