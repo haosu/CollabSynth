@@ -224,7 +224,7 @@ function MusicBoard() {
 		this.playInterval = setInterval(this.play, 400);
 
 		this.update();
-		this.refreshInterval = setInterval(this.refresh, 5000);
+		this.refreshInterval = setInterval(this.refresh, 60000);
 	};
 
 	this.onJoinError = function(data) {

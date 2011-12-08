@@ -196,8 +196,8 @@ fu.get("/pictos-web.svg", fu.staticHandler("pictos/pictos-web.svg"));
 fu.get("/pictos-web.ttf", fu.staticHandler("pictos/pictos-web.ttf"));
 fu.get("/pictos-web.woff", fu.staticHandler("pictos/pictos-web.woff"));
 fu.get("/pictos.css", fu.staticHandler("pictos/pictos.css"));
-  
-    
+
+
 // send
 fu.get("/send", function(req, res) {
 	var userId = qs.parse(url.parse(req.url).query).userId;
