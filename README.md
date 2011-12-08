@@ -1,7 +1,7 @@
 # CollabSynth - Collorative music player
 
 This started out as a node.js exercise and html/css/js practice
-Collaborative synthesizer similar to Yamaha's Tenori-on
+Collaborative synthesizer similar to Yamaha's Tenori-on.  Join in and fork this!
 
 # TODO
 
